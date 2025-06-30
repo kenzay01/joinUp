@@ -1,10 +1,14 @@
 "use client";
 import { useState } from "react";
-
 import backImg from "@/public/main_banner_bg.jpg";
 
 export default function MainBanner() {
   const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+  });
+
+  const [errors, setErrors] = useState({
     name: "",
     phone: "",
   });
@@ -15,11 +19,37 @@ export default function MainBanner() {
       ...prev,
       [name]: value,
     }));
+
+    // Очищаємо помилку при введенні
+    setErrors((prev) => ({
+      ...prev,
+      [name]: "",
+    }));
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Handle form submission here
+
+    const newErrors = {
+      name: "",
+      phone: "",
+    };
+
+    // Валідація
+    if (!formData.name.trim()) {
+      newErrors.name = "Будь ласка, введіть ім’я.";
+    }
+
+    if (!formData.phone.trim()) {
+      newErrors.phone = "Будь ласка, введіть номер телефону.";
+    }
+
+    setErrors(newErrors);
+
+    // Якщо є помилки — не відправляємо форму
+    if (newErrors.name || newErrors.phone) return;
+
+    // Успішна відправка
     console.log("Form submitted:", formData);
   };
 
@@ -89,8 +119,10 @@ export default function MainBanner() {
                   value={formData.name}
                   onChange={handleInputChange}
                   className="w-full px-4 py-3  bg-white/90 border-0 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500"
-                  required
                 />
+                {errors.name && (
+                  <p className="text-red-600 text-sm mt-1">{errors.name}</p>
+                )}
               </div>
 
               <div>
@@ -101,8 +133,10 @@ export default function MainBanner() {
                   value={formData.phone}
                   onChange={handleInputChange}
                   className="w-full px-4 py-3  bg-white/90 border-0 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500"
-                  required
                 />
+                {errors.phone && (
+                  <p className="text-red-600 text-sm mt-1">{errors.phone}</p>
+                )}
               </div>
 
               <button
