@@ -7,7 +7,6 @@ import Link from "next/link";
 
 export default function SendRequestPage() {
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const options = [
     "Додаткові екскурсії від 550 грн",
     "Обід в літаку від 350 грн",
