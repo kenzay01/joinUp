@@ -1,5 +1,5 @@
 import Image from "next/image";
-import image1 from "@/public/whyJoinUs/img1.jpg";
+import image1 from "@/public/whyJoinUs/img1.jpeg";
 import image2 from "@/public/whyJoinUs/img2.jpg";
 import image3 from "@/public/whyJoinUs/img3.jpg";
 import logo from "@/public/logo.jpg";
