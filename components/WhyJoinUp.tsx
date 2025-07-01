@@ -25,7 +25,7 @@ export default function WhyJoinUp() {
 
   return (
     <section className="bg-orange-500 flex flex-col items-center justify-center py-12">
-      <h1 className="text-5xl font-bold text-white mb-8">
+      <h1 className="text-3xl md:text-5xl font-bold text-white mb-8 text-center md:text-left">
         Чому Join UP! To travel?
       </h1>
       <div className="flex flex-col md:flex-row md:space-x-8 space-y-6 md:space-y-0">

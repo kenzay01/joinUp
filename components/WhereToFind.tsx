@@ -9,11 +9,11 @@ export default function WhereToFind() {
   return (
     <section className="flex flex-col">
       <div
-        className="flex flex-col md:flex-row md:h-[450px] bg-white"
+        className="flex flex-col md:flex-row md:h-[450px]  bg-white"
         id="destinations"
       >
         {/* Ліве зображення */}
-        <div className="md:flex-1 relative h-[450px] md:h-auto">
+        <div className="md:flex-1 relative  h-[350px] md:h-auto">
           <Image
             src={leftImage}
             alt="JoinUp Tour Office Left"
@@ -64,7 +64,7 @@ export default function WhereToFind() {
         </div>
 
         {/* Праве зображення */}
-        <div className="md:flex-1 relative h-[450px] md:h-auto">
+        <div className="md:flex-1 relative h-[350px] md:h-auto">
           <Image
             src={rightImage}
             alt="JoinUp Tour Office Right"

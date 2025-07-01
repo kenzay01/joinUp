@@ -155,7 +155,7 @@ export default function SliderContainer({
   const getTransform = () => {
     if (isMobile) {
       // На мобільних показуємо по 2 слайди, зсув на повну ширину контейнера
-      return `translateX(-${currentSlide * 106}%)`;
+      return `translateX(-${currentSlide * 108}%)`;
     } else {
       // На десктопі залишаємо оригінальну логіку
       return `translateX(-${currentSlide * 280}px)`;
@@ -164,7 +164,7 @@ export default function SliderContainer({
 
   return (
     <section className={`py-8 bg-white ${styles}`}>
-      <div className="max-w-8xl mx-auto px-4">
+      <div className="max-w-8xl mx-auto px-2 md:px-4">
         {/* Заголовок */}
         <div className="text-center mb-12 relative">
           <h2 className="text-4xl md:text-5xl font-semibold text-blue-900 mb-4">
