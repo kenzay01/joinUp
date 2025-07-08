@@ -5,8 +5,8 @@ import photo from "@/public/onlywithus.jpg";
 import photo2 from "@/public/onlywithus2.jpg";
 import arrowImage from "@/public/arrow.png";
 import arrowBlackImage from "@/public/arrow_black.png";
-import { useRouter } from "next/navigation";
-
+// import { useRouter } from "next/navigation";
+import { sendToBitrix24 } from "@/utils/sendToBitrix";
 const countries = [
   "Австрія",
   "Андора",
@@ -40,7 +40,7 @@ const countries = [
 ];
 
 export default function OnlyWithUsContainer({ type }: { type?: string }) {
-  const router = useRouter();
+  //   const router = useRouter();
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -49,6 +49,7 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
     wishes: "",
   });
   const [errors, setErrors] = useState({ name: "", phone: "", email: "" });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [headerHeight, setHeaderHeight] = useState(0);
 
@@ -89,7 +90,7 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
           behavior: "smooth",
         });
       }
-    }, 50); // або 100
+    }, 50);
   };
 
   const title =
@@ -111,7 +112,7 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
         Залиште заявку <span className="uppercase">сьогодні</span> і <br />
         отримаєте сертифікат на <br />{" "}
         <span className="uppercase">безкоштовне таксі</span> в <br /> аеропорт і{" "}
-        <span className="uppercase text-blue-600">м’яку іграшку</span> <br />
+        <span className="uppercase text-blue-600">м`яку іграшку</span> <br />
         <span className="uppercase text-blue-600">для дитини</span> до вильоту
       </p>
     ) : (
@@ -133,10 +134,12 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Валідація форми
     const newErrors = {
-      name: formData.name.trim() ? "" : "Введіть ім’я",
+      name: formData.name.trim() ? "" : "Введіть ім'я",
       phone: formData.phone.trim() ? "" : "Введіть телефон",
       email: formData.email.trim() ? "" : "Введіть email",
     };
@@ -144,24 +147,49 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
 
     if (Object.values(newErrors).some((err) => err !== "")) return;
 
-    console.log("Form submitted:", formData);
-    alert("Заявка відправлена!");
-    setFormData({
-      name: "",
-      phone: "",
-      email: "",
-      destination: "",
-      wishes: "",
-    });
-    router.push("/send-request");
+    setIsSubmitting(true);
+
+    try {
+      // Відправка даних в Bitrix24
+      const result = await sendToBitrix24(formData);
+
+      if (result.success) {
+        alert(
+          "Заявка успішно відправлена! Наші менеджери зв'яжуться з вами найближчим часом."
+        );
+
+        // Очистка форми
+        setFormData({
+          name: "",
+          phone: "",
+          email: "",
+          destination: "",
+          wishes: "",
+        });
+
+        // Перенаправлення на сторінку успіху
+        // router.push("/send-request");
+      } else {
+        console.error("Помилка при відправці:", result.error);
+        alert(
+          "Сталася помилка при відправці заявки. Будь ласка, спробуйте ще раз або зв'яжіться з нами по телефону."
+        );
+      }
+    } catch (error) {
+      console.error("Неочікувана помилка:", error);
+      alert("Сталася неочікувана помилка. Будь ласка, спробуйте ще раз.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const formTitle =
     type === "type1"
       ? "Підібрати тур"
       : "Залиште заявку та отримайте Гарячий Тур від Join UP! To travel";
+
   return (
-    <section className="relative pt-12 flex flex-col bg-white">
+    <section className="relative pt-12 flex flex-col bg-white" id="form">
       <div className="relative z-10 w-full mx-auto flex flex-col">
         {title}
 
@@ -229,10 +257,11 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
                     <input
                       type="text"
                       name="name"
-                      value={formData.name}
+                      value={formData.email}
                       onChange={handleInputChange}
-                      placeholder="Ваше ім’я*"
+                      placeholder="Ваше ім'я*"
                       className="w-full px-4 py-2 bg-white border border-gray-300"
+                      disabled={isSubmitting}
                     />
                     <input
                       type="tel"
@@ -241,6 +270,7 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
                       onChange={handleInputChange}
                       placeholder="Ваш телефон*"
                       className="w-full px-4 py-2 bg-white border border-gray-300"
+                      disabled={isSubmitting}
                     />
                   </div>
 
@@ -252,12 +282,14 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
                       onChange={handleInputChange}
                       placeholder="Ваш E-mail*"
                       className="w-full px-4 py-2 bg-white border border-gray-300"
+                      disabled={isSubmitting}
                     />
                     <select
                       name="destination"
                       value={formData.destination}
                       onChange={handleInputChange}
                       className="w-full px-4 py-2.5 border border-gray-300 bg-white"
+                      disabled={isSubmitting}
                     >
                       <option value="">Летимо в...</option>
                       {countries.map((country) => (
@@ -270,9 +302,10 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
 
                   <button
                     type="submit"
-                    className="bg-yellow-400 hover:bg-yellow-500 text-black font-bold w-full py-2 transition-colors"
+                    disabled={isSubmitting}
+                    className="bg-yellow-400 hover:bg-yellow-500 text-black font-bold w-full py-2 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
                   >
-                    Підібрати тур
+                    {isSubmitting ? "Відправляємо..." : "Підібрати тур"}
                   </button>
 
                   <textarea
@@ -282,6 +315,7 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
                     placeholder="Ваші побажання"
                     className="w-full px-4 py-2 bg-white border border-gray-300 resize-none"
                     rows={2}
+                    disabled={isSubmitting}
                   ></textarea>
                 </div>
 
@@ -293,8 +327,9 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
                       name="name"
                       value={formData.name}
                       onChange={handleInputChange}
-                      placeholder="Ваше ім’я*"
+                      placeholder="Ваше ім'я*"
                       className="w-full px-4 py-2 bg-white border border-gray-300"
+                      disabled={isSubmitting}
                     />
                     {errors.name && (
                       <p className="text-red-500 text-xs mt-1">{errors.name}</p>
@@ -308,6 +343,7 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
                       onChange={handleInputChange}
                       placeholder="Ваш телефон*"
                       className="w-full px-4 py-2 bg-white border border-gray-300"
+                      disabled={isSubmitting}
                     />
                     {errors.phone && (
                       <p className="text-red-500 text-xs mt-1">
@@ -323,6 +359,7 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
                       onChange={handleInputChange}
                       placeholder="Ваш E-mail*"
                       className="w-full px-4 py-2 bg-white border border-gray-300"
+                      disabled={isSubmitting}
                     />
                     {errors.email && (
                       <p className="text-red-500 text-xs mt-1">
@@ -336,6 +373,7 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
                       value={formData.destination}
                       onChange={handleInputChange}
                       className="w-full px-4 py-2.5 border border-gray-300 bg-white"
+                      disabled={isSubmitting}
                     >
                       <option value="">Летимо в...</option>
                       {countries.map((country) => (
@@ -347,9 +385,10 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
                   </div>
                   <button
                     type="submit"
-                    className="bg-yellow-400 hover:bg-yellow-500 text-black font-bold px-6 py-2 transition-colors"
+                    disabled={isSubmitting}
+                    className="bg-yellow-400 hover:bg-yellow-500 text-black font-bold px-6 py-2 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
                   >
-                    Підібрати тур
+                    {isSubmitting ? "Відправляємо..." : "Підібрати тур"}
                   </button>
                 </div>
 
@@ -361,6 +400,7 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
                     placeholder="Ваші побажання"
                     className="w-full px-4 py-2 bg-white border border-gray-300 resize-none"
                     rows={2}
+                    disabled={isSubmitting}
                   ></textarea>
                 </div>
               </>
@@ -374,8 +414,9 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
                       name="name"
                       value={formData.name}
                       onChange={handleInputChange}
-                      placeholder="Ваше ім’я*"
+                      placeholder="Ваше ім'я*"
                       className="w-full px-4 py-2 bg-white border border-gray-300"
+                      disabled={isSubmitting}
                     />
                     <input
                       type="tel"
@@ -384,6 +425,7 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
                       onChange={handleInputChange}
                       placeholder="Ваш телефон*"
                       className="w-full px-4 py-2 bg-white border border-gray-300"
+                      disabled={isSubmitting}
                     />
                   </div>
 
@@ -395,12 +437,14 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
                       onChange={handleInputChange}
                       placeholder="Ваш email*"
                       className="w-full px-4 py-2 bg-white border border-gray-300"
+                      disabled={isSubmitting}
                     />
                     <select
                       name="destination"
                       value={formData.destination}
                       onChange={handleInputChange}
                       className="w-full px-4 py-2.5 border border-gray-300 bg-white"
+                      disabled={isSubmitting}
                     >
                       <option value="">Летимо в...</option>
                       {countries.map((country) => (
@@ -413,9 +457,10 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
 
                   <button
                     type="submit"
-                    className="bg-yellow-400 hover:bg-yellow-500 text-black font-bold w-full py-2 transition-colors"
+                    disabled={isSubmitting}
+                    className="bg-yellow-400 hover:bg-yellow-500 text-black font-bold w-full py-2 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
                   >
-                    Підібрати тур
+                    {isSubmitting ? "Відправляємо..." : "Підібрати тур"}
                   </button>
                 </div>
 
@@ -427,8 +472,9 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
                       name="name"
                       value={formData.name}
                       onChange={handleInputChange}
-                      placeholder="Ваше ім’я*"
+                      placeholder="Ваше ім'я*"
                       className="w-full px-4 py-2 bg-white border border-gray-300"
+                      disabled={isSubmitting}
                     />
                     {errors.name && (
                       <p className="text-red-500 text-xs mt-1">{errors.name}</p>
@@ -442,6 +488,7 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
                       onChange={handleInputChange}
                       placeholder="Ваш телефон*"
                       className="w-full px-4 py-2 bg-white border border-gray-300"
+                      disabled={isSubmitting}
                     />
                     {errors.phone && (
                       <p className="text-red-500 text-xs mt-1">
@@ -457,6 +504,7 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
                       onChange={handleInputChange}
                       placeholder="Ваш email*"
                       className="w-full px-4 py-2 bg-white border border-gray-300"
+                      disabled={isSubmitting}
                     />
                     {errors.email && (
                       <p className="text-red-500 text-xs mt-1">
@@ -470,6 +518,7 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
                       value={formData.destination}
                       onChange={handleInputChange}
                       className="w-full px-4 py-2.5 border border-gray-300 bg-white"
+                      disabled={isSubmitting}
                     >
                       <option value="">Летимо в...</option>
                       {countries.map((country) => (
@@ -483,9 +532,10 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
                   <div className="flex-shrink-0">
                     <button
                       type="submit"
-                      className="bg-yellow-400 hover:bg-yellow-500 text-black font-bold px-6 py-2 mt-4 transition-colors"
+                      disabled={isSubmitting}
+                      className="bg-yellow-400 hover:bg-yellow-500 text-black font-bold px-6 py-2 mt-4 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
                     >
-                      Підібрати тур
+                      {isSubmitting ? "Відправляємо..." : "Підібрати тур"}
                     </button>
                   </div>
                 </div>

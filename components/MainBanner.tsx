@@ -1,10 +1,13 @@
 "use client";
 import { useState, useEffect } from "react";
 import backImg from "@/public/main_banner_bg.jpg";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
+
+// Импортируем функцию отправки в Bitrix24
+import { sendToBitrix24 } from "@/utils/sendToBitrix";
 
 export default function MainBanner() {
-  const router = useRouter();
+  //   const router = useRouter();
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -15,6 +18,7 @@ export default function MainBanner() {
     phone: "",
   });
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [currentManagersIndex, setCurrentManagersIndex] = useState(0);
   const [currentMainTitleIndex, setCurrentMainTitleIndex] = useState(0);
@@ -47,7 +51,7 @@ export default function MainBanner() {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const newErrors = {
@@ -57,7 +61,7 @@ export default function MainBanner() {
 
     // Валідація
     if (!formData.name.trim()) {
-      newErrors.name = "Будь ласка, введіть ім’я.";
+      newErrors.name = "Будь ласка, введіть ім'я.";
     }
 
     if (!formData.phone.trim()) {
@@ -69,10 +73,38 @@ export default function MainBanner() {
     // Якщо є помилки — не відправляємо форму
     if (newErrors.name || newErrors.phone) return;
 
-    // Успішна відправка
-    console.log("Form submitted:", formData);
+    // Блокуємо кнопку під час відправки
+    setIsSubmitting(true);
 
-    router.push("/send-request");
+    try {
+      // Відправляємо дані в Bitrix24
+      const result = await sendToBitrix24({
+        name: formData.name,
+        phone: formData.phone,
+      });
+
+      if (result.success) {
+        console.log("✅ Форма успішно відправлена:", formData);
+
+        // Очищаємо форму
+        setFormData({
+          name: "",
+          phone: "",
+        });
+
+        // Переходимо на сторінку успіху
+        // router.push("/send-request");
+      } else {
+        console.error("❌ Помилка при відправці:", result.error);
+        // Можна показати повідомлення про помилку користувачеві
+        alert("Помилка при відправці форми. Спробуйте ще раз.");
+      }
+    } catch (error) {
+      console.error("❌ Непередбачена помилка:", error);
+      alert("Помилка при відправці форми. Спробуйте ще раз.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const smoothTransition = (
@@ -204,6 +236,7 @@ export default function MainBanner() {
                   value={formData.name}
                   onChange={handleInputChange}
                   className="w-full px-4 py-3  bg-white/90 border-0 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  disabled={isSubmitting}
                 />
                 {errors.name && (
                   <p className="text-red-600 text-sm mt-1">{errors.name}</p>
@@ -218,6 +251,7 @@ export default function MainBanner() {
                   value={formData.phone}
                   onChange={handleInputChange}
                   className="w-full px-4 py-3  bg-white/90 border-0 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  disabled={isSubmitting}
                 />
                 {errors.phone && (
                   <p className="text-red-600 text-sm mt-1">{errors.phone}</p>
@@ -226,9 +260,10 @@ export default function MainBanner() {
 
               <button
                 type="submit"
-                className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 px-6  transition-colors duration-200 text-lg"
+                disabled={isSubmitting}
+                className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 px-6 transition-colors duration-200 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Підібрати тур
+                {isSubmitting ? "Відправляємо..." : "Підібрати тур"}
               </button>
             </form>
 
