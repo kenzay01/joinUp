@@ -9,7 +9,7 @@ export default function WhereToFind() {
   return (
     <section className="flex flex-col">
       <div
-        className="flex flex-col md:flex-row md:h-[450px] bg-white"
+        className="flex flex-col md:flex-row md:h-[550px] bg-white"
         id="destinations"
       >
         {/* Ліве зображення */}
