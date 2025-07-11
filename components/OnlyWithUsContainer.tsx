@@ -10,7 +10,7 @@ import { sendToBitrix24 } from "@/utils/sendToBitrix";
 const countries = [
   "Австрія",
   "Андора",
-  "Білорусь",
+  // "Білорусь",
   "Болгарія",
   "Угорщина",
   "Греція",
@@ -110,15 +110,15 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
     type === "type1" ? (
       <p className="text-3xl md:text-5xl md:leading-14">
         Залиште заявку <span className="uppercase">сьогодні</span> і <br />
-        отримаєте сертифікат на <br />{" "}
-        <span className="uppercase">безкоштовне таксі</span> в <br /> аеропорт і{" "}
-        <span className="uppercase text-blue-600">м`яку іграшку</span> <br />
+        отримаєте пляшку шампанського{" "}
+        <span className="uppercase text-blue-600">для дорослих</span> <br />
+        або <span className="uppercase text-blue-600">м`яку іграшку</span>{" "}
+        <br />
         <span className="uppercase text-blue-600">для дитини</span> до вильоту
       </p>
     ) : (
       <p className="text-3xl md:text-5xl md:leading-14 text-black">
         Залиште заявку ЗАРАЗ і <br /> отримайте пропозицію на <br /> гарячий тур
-        + трансфер в <br /> аеропорт
       </p>
     );
 

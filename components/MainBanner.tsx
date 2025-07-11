@@ -34,7 +34,7 @@ export default function MainBanner() {
     "Повний супровід під час поїздки",
     "Виїзд менеджера в офіс / додому",
     "45 країн світу",
-    "6 агентств в різних частинах міста",
+    "6 туристичних агентств в різних частинах міста",
   ];
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

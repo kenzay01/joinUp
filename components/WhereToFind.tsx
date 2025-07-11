@@ -9,11 +9,11 @@ export default function WhereToFind() {
   return (
     <section className="flex flex-col">
       <div
-        className="flex flex-col md:flex-row md:h-[450px]  bg-white"
+        className="flex flex-col md:flex-row md:h-[450px] bg-white"
         id="destinations"
       >
         {/* Ліве зображення */}
-        <div className="md:flex-1 relative  h-[350px] md:h-auto">
+        <div className="md:flex-1 relative h-[350px] md:h-auto">
           <Image
             src={leftImage}
             alt="JoinUp Tour Office Left"
@@ -24,39 +24,86 @@ export default function WhereToFind() {
 
         {/* Центральна частина */}
         <div className="md:flex-1 flex items-center justify-center bg-[#FF6600] text-white px-6 py-8">
-          <div className="text-center space-y-6 text-sm md:text-base">
+          <div className="text-center space-y-2 text-xs md:text-sm max-w-lg">
             <h2 className="text-xl md:text-2xl font-semibold">
               Де нас можна знайти
             </h2>
 
-            <div className="space-y-4">
+            <div className="flex flex-wrap md:grid md:grid-cols-2 gap-4">
               <div>
                 <p className="font-semibold">м. Київ</p>
-                <p className="flex items-center justify-center gap-2">
+                <p className="flex items-center justify-center gap-2 text-xs md:text-sm">
                   <Image src={metroImg} alt="Metro" width={16} height={16} />
-                  Академмістечко
+                  Мінська
                 </p>
-                <p>ТЦ Ашан Беличи, вул. Берковецька 6</p>
+                <p className="text-xs md:text-sm">
+                  ТЦ Смарт Плаза, 1 поверх, біля повітряних кульок, Join Up
+                </p>
                 <a href="tel:+380443933323">+38 (044) 393 33 23</a>
               </div>
 
               <div>
                 <p className="font-semibold">м. Київ</p>
-                <p className="flex items-center justify-center gap-2">
+                <p className="flex items-center justify-center gap-2 text-xs md:text-sm">
+                  <Image src={metroImg} alt="Metro" width={16} height={16} />
+                  Шулявська
+                </p>
+                <p className="text-xs md:text-sm">
+                  ТЦ Мармелад, 1 поверх, вхід зі сторони Індустріального моста,
+                  вул. Борщагівська 154, Join Up
+                </p>
+                <a href="tel:+380443933323">+38 (044) 393 33 23</a>
+              </div>
+
+              <div>
+                <p className="font-semibold">м. Київ</p>
+                <p className="flex items-center justify-center gap-2 text-xs md:text-sm">
+                  <Image src={metroImg} alt="Metro" width={16} height={16} />
+                  Площа Українських Героїв
+                </p>
+                <p className="text-xs md:text-sm">
+                  ТЦ Метроград, вул. Велика Васильківська 23, з метро ліворуч,
+                  вхід через магазин Єва, Join Up
+                </p>
+                <a href="tel:+380443933323">+38 (044) 393 33 23</a>
+              </div>
+
+              <div>
+                <p className="font-semibold">м. Київ</p>
+                <p className="flex items-center justify-center gap-2 text-xs md:text-sm">
+                  <Image src={metroImg} alt="Metro" width={16} height={16} />
+                  Позняки
+                </p>
+                <p className="text-xs md:text-sm">
+                  ТЦ Піраміда, 1 поверх, біля входу зі сторони пр-ту Бажана,
+                  вул. Мішуги 4, Join Up
+                </p>
+                <a href="tel:+380443933323">+38 (044) 393 33 23</a>
+              </div>
+
+              <div>
+                <p className="font-semibold">м. Київ</p>
+                <p className="flex items-center justify-center gap-2 text-xs md:text-sm">
+                  <Image src={metroImg} alt="Metro" width={16} height={16} />
+                  Осокорки
+                </p>
+                <p className="text-xs md:text-sm">
+                  ТЦ Аркадія, Дніпровська набережна 33, 1-й поверх, праве крило,
+                  біля золота, Join Up
+                </p>
+                <a href="tel:+380443933323">+38 (044) 393 33 23</a>
+              </div>
+
+              <div>
+                <p className="font-semibold">м. Київ</p>
+                <p className="flex items-center justify-center gap-2 text-xs md:text-sm">
                   <Image src={metroImg} alt="Metro" width={16} height={16} />
                   Почайна
                 </p>
-                <p>ТЦ Gorodok Gallery, пр-т Степана Бандери, 23</p>
-                <a href="tel:+380443933323">+38 (044) 393 33 23</a>
-              </div>
-
-              <div>
-                <p className="font-semibold">м. Київ</p>
-                <p className="flex items-center justify-center gap-2">
-                  <Image src={metroImg} alt="Metro" width={16} height={16} />
-                  Оболонь
+                <p className="text-xs md:text-sm">
+                  ТЦ Gorodok Gallery, пр-т Степана Бандери 23, 1-й поверх, біля
+                  надувних кульок, Join Up
                 </p>
-                <p>ТРЦ Караван Outlet, вул. Лугова, 12</p>
                 <a href="tel:+380443933323">+38 (044) 393 33 23</a>
               </div>
             </div>
