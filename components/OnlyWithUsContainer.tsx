@@ -5,12 +5,11 @@ import photo from "@/public/onlywithus.jpg";
 import photo2 from "@/public/onlywithus2.jpg";
 import arrowImage from "@/public/arrow.png";
 import arrowBlackImage from "@/public/arrow_black.png";
-// import { useRouter } from "next/navigation";
 import { sendToBitrix24 } from "@/utils/sendToBitrix";
+
 const countries = [
   "Австрія",
   "Андора",
-  // "Білорусь",
   "Болгарія",
   "Угорщина",
   "Греція",
@@ -40,7 +39,6 @@ const countries = [
 ];
 
 export default function OnlyWithUsContainer({ type }: { type?: string }) {
-  //   const router = useRouter();
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -50,10 +48,8 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
   });
   const [errors, setErrors] = useState({ name: "", phone: "", email: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
-
   const [headerHeight, setHeaderHeight] = useState(0);
 
-  // Calculate header height on mount and resize
   useEffect(() => {
     const calculateHeaderHeight = () => {
       const header = document.querySelector("header");
@@ -73,9 +69,7 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
     href: string
   ) => {
     e.preventDefault();
-
     const targetId = href.split("#")[1];
-
     setTimeout(() => {
       const targetElement = document.getElementById(targetId);
       if (targetElement) {
@@ -128,7 +122,17 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
     >
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    let newValue = value;
+
+    if (name === "phone" && value.trim() && !value.startsWith("+380")) {
+      if (/^\d/.test(value)) {
+        newValue = "+380" + value.replace(/^\d+/, "");
+      } else {
+        newValue = value.replace(/^\+?38?0?/, "+380");
+      }
+    }
+
+    setFormData((prev) => ({ ...prev, [name]: newValue }));
     if (errors[name as keyof typeof errors]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
@@ -137,12 +141,27 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Валідація форми
     const newErrors = {
-      name: formData.name.trim() ? "" : "Введіть ім'я",
-      phone: formData.phone.trim() ? "" : "Введіть телефон",
-      email: formData.email.trim() ? "" : "Введіть email",
+      name: "",
+      phone: "",
+      email: "",
     };
+
+    if (!formData.name.trim()) {
+      newErrors.name = "Введіть ім'я";
+    }
+
+    const phoneRegex = /^\+380\d{9}$/;
+    if (!formData.phone.trim()) {
+      newErrors.phone = "Введіть телефон";
+    } else if (!phoneRegex.test(formData.phone)) {
+      newErrors.phone = "Ви ввели некоректний номер.";
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = "Введіть email";
+    }
+
     setErrors(newErrors);
 
     if (Object.values(newErrors).some((err) => err !== "")) return;
@@ -150,15 +169,12 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
     setIsSubmitting(true);
 
     try {
-      // Відправка даних в Bitrix24
       const result = await sendToBitrix24(formData);
 
       if (result.success) {
         alert(
           "Заявка успішно відправлена! Наші менеджери зв'яжуться з вами найближчим часом."
         );
-
-        // Очистка форми
         setFormData({
           name: "",
           phone: "",
@@ -166,9 +182,6 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
           destination: "",
           wishes: "",
         });
-
-        // Перенаправлення на сторінку успіху
-        // router.push("/send-request");
       } else {
         console.error("Помилка при відправці:", result.error);
         alert(
@@ -192,14 +205,12 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
     <section className="relative pt-12 flex flex-col bg-white" id="form">
       <div className="relative z-10 w-full mx-auto flex flex-col">
         {title}
-
         <div className="flex flex-col-reverse md:flex-row items-center justify-end">
           <Image
             src={photoSrc}
             alt="Only With Us"
             className="h-auto md:h-64 w-auto"
           />
-
           <div className="text-white">
             <div
               className={`${
@@ -241,8 +252,6 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
           </div>
         ) : null}
       </div>
-
-      {/* ===== ФОРМА ===== */}
       <div className="bg-slate-700 py-8">
         <div className="max-w-5xl mx-auto px-4">
           <h2 className="text-white text-2xl font-semibold mb-6 text-center md:text-left">
@@ -251,13 +260,12 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
           <form onSubmit={handleSubmit}>
             {type === "type1" ? (
               <>
-                {/* MOBILE layout */}
                 <div className="flex md:hidden flex-col gap-4">
                   <div className="grid grid-cols-2 gap-4">
                     <input
                       type="text"
                       name="name"
-                      value={formData.email}
+                      value={formData.name}
                       onChange={handleInputChange}
                       placeholder="Ваше ім'я*"
                       className="w-full px-4 py-2 bg-white border border-gray-300"
@@ -273,7 +281,6 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
                       disabled={isSubmitting}
                     />
                   </div>
-
                   <div className="grid grid-cols-2 gap-4">
                     <input
                       type="email"
@@ -299,7 +306,6 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
                       ))}
                     </select>
                   </div>
-
                   <button
                     type="submit"
                     disabled={isSubmitting}
@@ -307,7 +313,6 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
                   >
                     {isSubmitting ? "Відправляємо..." : "Підібрати тур"}
                   </button>
-
                   <textarea
                     name="wishes"
                     value={formData.wishes}
@@ -318,8 +323,6 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
                     disabled={isSubmitting}
                   ></textarea>
                 </div>
-
-                {/* DESKTOP layout */}
                 <div className="hidden md:flex md:flex-row md:flex-wrap gap-2 justify-start">
                   <div className="flex-1 min-w-[150px] max-w-[220px]">
                     <input
@@ -391,7 +394,6 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
                     {isSubmitting ? "Відправляємо..." : "Підібрати тур"}
                   </button>
                 </div>
-
                 <div className="hidden md:block mt-2 md:mt-2">
                   <textarea
                     name="wishes"
@@ -406,7 +408,6 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
               </>
             ) : (
               <>
-                {/* MOBILE layout */}
                 <div className="flex md:hidden flex-col gap-4">
                   <div className="grid grid-cols-2 gap-4">
                     <input
@@ -428,7 +429,6 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
                       disabled={isSubmitting}
                     />
                   </div>
-
                   <div className="grid grid-cols-2 gap-4">
                     <input
                       type="email"
@@ -454,7 +454,6 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
                       ))}
                     </select>
                   </div>
-
                   <button
                     type="submit"
                     disabled={isSubmitting}
@@ -463,8 +462,6 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
                     {isSubmitting ? "Відправляємо..." : "Підібрати тур"}
                   </button>
                 </div>
-
-                {/* DESKTOP layout */}
                 <div className="hidden md:flex flex-wrap gap-4 items-end justify-end">
                   <div className="flex-1 min-w-[150px] max-w-[220px]">
                     <input
@@ -528,7 +525,6 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
                       ))}
                     </select>
                   </div>
-
                   <div className="flex-shrink-0">
                     <button
                       type="submit"

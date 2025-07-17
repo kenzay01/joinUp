@@ -1,13 +1,9 @@
 "use client";
 import { useState, useEffect } from "react";
 import backImg from "@/public/main_banner_bg.jpg";
-// import { useRouter } from "next/navigation";
-
-// Импортируем функцию отправки в Bitrix24
 import { sendToBitrix24 } from "@/utils/sendToBitrix";
 
 export default function MainBanner() {
-  //   const router = useRouter();
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -39,12 +35,22 @@ export default function MainBanner() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    let newValue = value;
+
+    // Автоматично додаємо +380, якщо номер починається з цифри
+    if (name === "phone" && value.trim() && !value.startsWith("+380")) {
+      if (/^\d/.test(value)) {
+        newValue = "+380" + value.replace(/^\d+/, "");
+      } else {
+        newValue = value.replace(/^\+?38?0?/, "+380");
+      }
+    }
+
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: newValue,
     }));
 
-    // Очищаємо помилку при введенні
     setErrors((prev) => ({
       ...prev,
       [name]: "",
@@ -59,25 +65,24 @@ export default function MainBanner() {
       phone: "",
     };
 
-    // Валідація
     if (!formData.name.trim()) {
       newErrors.name = "Будь ласка, введіть ім'я.";
     }
 
+    const phoneRegex = /^\+380\d{9}$/;
     if (!formData.phone.trim()) {
       newErrors.phone = "Будь ласка, введіть номер телефону.";
+    } else if (!phoneRegex.test(formData.phone)) {
+      newErrors.phone = "Ви ввели некоректний номер.";
     }
 
     setErrors(newErrors);
 
-    // Якщо є помилки — не відправляємо форму
     if (newErrors.name || newErrors.phone) return;
 
-    // Блокуємо кнопку під час відправки
     setIsSubmitting(true);
 
     try {
-      // Відправляємо дані в Bitrix24
       const result = await sendToBitrix24({
         name: formData.name,
         phone: formData.phone,
@@ -85,18 +90,12 @@ export default function MainBanner() {
 
       if (result.success) {
         console.log("✅ Форма успішно відправлена:", formData);
-
-        // Очищаємо форму
         setFormData({
           name: "",
           phone: "",
         });
-
-        // Переходимо на сторінку успіху
-        // router.push("/send-request");
       } else {
         console.error("❌ Помилка при відправці:", result.error);
-        // Можна показати повідомлення про помилку користувачеві
         alert("Помилка при відправці форми. Спробуйте ще раз.");
       }
     } catch (error) {
@@ -112,7 +111,6 @@ export default function MainBanner() {
     maxIndex: number
   ) => {
     setIsTransitioning(true);
-
     setTimeout(() => {
       setter((prev) => (prev + 1) % maxIndex);
       setTimeout(() => {
@@ -151,7 +149,6 @@ export default function MainBanner() {
 
       <div className="relative z-10 w-full mx-auto">
         <div className="flex flex-col items-center mt-4 md:mt-0">
-          {/* Top badge */}
           <div className="text-center mb-2 md:mb-4">
             <div className="inline-block bg-white/90 px-6 py-2 rounded-full">
               <span
@@ -166,7 +163,6 @@ export default function MainBanner() {
             </div>
           </div>
           <hr className="border-1 border-orange-500 w-[200px] text-center" />
-          {/* Main heading */}
           <div className="text-center mb-12">
             <h1
               className={`text-2xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight transition-all duration-700 ease-in-out ${
@@ -180,7 +176,6 @@ export default function MainBanner() {
           </div>
         </div>
         <div className="flex items-center flex-col md:flex-row px-8 md:px-0">
-          {/* Left Content */}
           <div className="text-white">
             <div className="bg-orange-500/80 p-8 mb-6 md:pl-60">
               <h2 className="text-2xl md:text-4xl font-bold mb-4 text-center md:text-left">
@@ -195,7 +190,6 @@ export default function MainBanner() {
                   ВОЄННОГО СТАНУ
                 </span>
               </h2>
-
               <div className="mt-6 text-center md:text-left">
                 <h3 className="text-lg md:text-2xl font-bold mb-2">Акція!</h3>
                 <p className="md:text-lg mb-2">
@@ -210,8 +204,6 @@ export default function MainBanner() {
               </div>
             </div>
           </div>
-
-          {/* Right Form */}
           <div
             className="bg-white/10 backdrop-blur-sm border-3 border-orange-500/80 p-8 max-w-md"
             id="form"
@@ -226,7 +218,6 @@ export default function MainBanner() {
                 всього за 1 ГОДИНУ
               </p>
             </div>
-
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <input
@@ -235,29 +226,27 @@ export default function MainBanner() {
                   placeholder="Ім'я"
                   value={formData.name}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3  bg-white/90 border-0 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="w-full px-4 py-3 bg-white/90 border-0 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500"
                   disabled={isSubmitting}
                 />
                 {errors.name && (
                   <p className="text-red-600 text-sm mt-1">{errors.name}</p>
                 )}
               </div>
-
               <div>
                 <input
                   type="tel"
                   name="phone"
-                  placeholder="Телефон"
+                  placeholder="+380..."
                   value={formData.phone}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3  bg-white/90 border-0 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="w-full px-4 py-3 bg-white/90 border-0 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500"
                   disabled={isSubmitting}
                 />
                 {errors.phone && (
                   <p className="text-red-600 text-sm mt-1">{errors.phone}</p>
                 )}
               </div>
-
               <button
                 type="submit"
                 disabled={isSubmitting}
@@ -266,7 +255,6 @@ export default function MainBanner() {
                 {isSubmitting ? "Відправляємо..." : "Підібрати тур"}
               </button>
             </form>
-
             <p className="text-white text-sm text-center mt-4 opacity-80">
               Наш менеджер зв`яжеться з Вами
               <br />

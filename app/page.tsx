@@ -7,6 +7,7 @@ import WhereToFind from "@/components/WhereToFind";
 // import Footer from "@/components/Footer";
 import RightSideButtons from "@/components/RightSideButtons";
 import TelegramPopup from "@/components/TelegramPopup";
+import CommentsContainer from "@/components/CommentsContainer";
 export default function Home() {
   return (
     <div>
@@ -17,6 +18,7 @@ export default function Home() {
       <SliderContainer title="Раннє Бронювання" />
       <WhyJoinUp />
       <OnlyWithUsContainer type="type2" />
+      <CommentsContainer />
       <WhereToFind />
       <RightSideButtons />
       <TelegramPopup />

@@ -77,6 +77,17 @@ export default function Footer() {
                 надувних кульок, Join Up
               </p>
             </div>
+            <div className="md:col-span-2">
+              <p className="font-semibold">м. Київ</p>
+              <p className="flex items-center justify-center md:justify-end gap-1">
+                <Image src="/metro.svg" alt="Metro" width={10} height={10} />
+                Почайна
+              </p>
+              <p>
+                ТЦ Ашан, пр-т Степана Бандери 15 А, Оболонські ворота, бутиків
+                зона, Join Up
+              </p>
+            </div>
           </div>
           <a className="underline block mt-2" href="tel:+380443933323">
             +38 (044) 393 33 23

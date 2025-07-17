@@ -63,7 +63,8 @@ export default function TelegramPopup() {
             Давай до нас в Telegram!
           </h3>
           <p className="text-sm md:text-base text-gray-700 mb-4">
-            Гарячі тури, знижки та актуальні новини поринуться в нашій спільноті
+            Гарячі тури, знижки та актуальні новини <br /> Пориньте в нашій
+            спільноті
           </p>
           <p className="text-sm md:text-base text-gray-500 gap-2 mb-2 flex items-center justify-center">
             <img src={trip_vibe.src} className="w-32 h-auto" alt="" /> телеграм

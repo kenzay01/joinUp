@@ -9,7 +9,7 @@ export default function WhereToFind() {
   return (
     <section className="flex flex-col">
       <div
-        className="flex flex-col md:flex-row md:h-[550px] bg-white"
+        className="flex flex-col md:flex-row md:h-[650px] bg-white"
         id="destinations"
       >
         {/* Ліве зображення */}
@@ -29,7 +29,7 @@ export default function WhereToFind() {
               Де нас можна знайти
             </h2>
 
-            <div className="flex flex-wrap md:grid md:grid-cols-2 gap-4">
+            <div className="flex flex-wrap items-center justify-center  md:grid md:grid-cols-2 gap-4">
               <div>
                 <p className="font-semibold">м. Київ</p>
                 <p className="flex items-center justify-center gap-2 text-xs md:text-sm">
@@ -103,6 +103,19 @@ export default function WhereToFind() {
                 <p className="text-xs md:text-sm">
                   ТЦ Gorodok Gallery, пр-т Степана Бандери 23, 1-й поверх, біля
                   надувних кульок, Join Up
+                </p>
+                <a href="tel:+380443933323">+38 (044) 393 33 23</a>
+              </div>
+
+              <div className="md:col-span-2">
+                <p className="font-semibold">м. Київ</p>
+                <p className="flex items-center justify-center gap-2 text-xs md:text-sm">
+                  <Image src={metroImg} alt="Metro" width={16} height={16} />
+                  Почайна
+                </p>
+                <p className="text-xs md:text-sm">
+                  ТЦ Ашан, пр-т Степана Бандери 15 А, Оболонські ворота, бутиків
+                  зона, Join Up
                 </p>
                 <a href="tel:+380443933323">+38 (044) 393 33 23</a>
               </div>

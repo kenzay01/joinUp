@@ -1,8 +1,6 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
-// import { useRouter } from "next/navigation";
 import { sendToBitrix24 } from "@/utils/sendToBitrix";
 
 export default function Modal({
@@ -14,8 +12,6 @@ export default function Modal({
   onClose: () => void;
   onSubmit?: (data: { name: string; phone: string }) => void;
 }) {
-  // const router = useRouter();
-
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -28,7 +24,6 @@ export default function Modal({
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Block scroll when modal is open
   useEffect(() => {
     if (isOpen) {
       const scrollY = window.scrollY;
@@ -42,7 +37,6 @@ export default function Modal({
         document.body.style.top = "";
         document.body.style.width = "";
         document.body.style.overflow = "";
-
         window.scrollTo(0, scrollY);
       };
     }
@@ -56,18 +50,19 @@ export default function Modal({
       phone: "",
     };
 
-    // Валідація
     if (formData.name.trim() === "") {
       newErrors.name = "Поле Ваше ім'я є обов'язковим для заповнення.";
     }
 
+    const phoneRegex = /^\+380\d{9}$/;
     if (formData.phone.trim() === "") {
       newErrors.phone = "Поле Ваш телефон є обов'язковим для заповнення.";
+    } else if (!phoneRegex.test(formData.phone)) {
+      newErrors.phone = "Ви ввели некоректний номер.";
     }
 
     setErrors(newErrors);
 
-    // Якщо є помилки, не відправляємо форму
     if (newErrors.name || newErrors.phone) {
       return;
     }
@@ -75,7 +70,6 @@ export default function Modal({
     setIsSubmitting(true);
 
     try {
-      // Відправка до Bitrix24
       const bitrixResult = await sendToBitrix24({
         name: formData.name,
         phone: formData.phone,
@@ -84,21 +78,12 @@ export default function Modal({
 
       if (bitrixResult.success) {
         console.log("Форма успішно відправлена до Bitrix24");
-
-        // Викликаємо callback якщо він переданий
         if (onSubmit) {
           onSubmit(formData);
         }
-
-        // Очищаємо форму
         setFormData({ name: "", phone: "" });
         setErrors({ name: "", phone: "" });
-
-        // Закриваємо модальне вікно
         onClose();
-
-        // Перенаправляємо на сторінку подяки
-        // router.push("/send-request");
       } else {
         console.error("Помилка при відправці до Bitrix24:", bitrixResult.error);
         alert("Сталася помилка при відправці форми. Спробуйте ще раз.");
@@ -112,12 +97,21 @@ export default function Modal({
   };
 
   const handleInputChange = (field: "name" | "phone", value: string) => {
+    let newValue = value;
+
+    if (field === "phone" && value.trim() && !value.startsWith("+380")) {
+      if (/^\d/.test(value)) {
+        newValue = "+380" + value.replace(/^\d+/, "");
+      } else {
+        newValue = value.replace(/^\+?38?0?/, "+380");
+      }
+    }
+
     setFormData((prev) => ({
       ...prev,
-      [field]: value,
+      [field]: newValue,
     }));
 
-    // Очищуємо помилку при введенні тексту
     if (field === "name" || field === "phone") {
       setErrors((prev) => ({
         ...prev,
@@ -138,7 +132,6 @@ export default function Modal({
       onClick={handleOverlayClick}
     >
       <div className="bg-slate-700 rounded-lg p-8 max-w-md w-full mx-4 relative">
-        {/* Close button */}
         <button
           onClick={onClose}
           className="absolute top-2 right-2 md:top-4 md:right-4 text-white hover:text-gray-300 transition-colors p-1 bg-gray-400 rounded-full"
@@ -146,15 +139,11 @@ export default function Modal({
         >
           <X size={24} />
         </button>
-
-        {/* Header */}
         <div className="text-center mb-6">
           <h2 className="text-white text-2xl font-medium leading-tight">
             Заповніть форму, щоб замовити дзвінок
           </h2>
         </div>
-
-        {/* Form */}
         <div className="space-y-4">
           <div>
             <input
@@ -169,7 +158,6 @@ export default function Modal({
               <p className="text-red-600 text-sm mt-1">{errors.name}</p>
             )}
           </div>
-
           <div>
             <input
               type="tel"
@@ -183,7 +171,6 @@ export default function Modal({
               <p className="text-red-600 text-sm mt-1">{errors.phone}</p>
             )}
           </div>
-
           <button
             onClick={handleSubmit}
             className="w-full bg-orange-500 hover:bg-orange-600 font-medium py-3 px-6 rounded transition-colors mt-6 disabled:opacity-50 disabled:cursor-not-allowed"
