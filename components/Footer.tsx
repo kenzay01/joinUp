@@ -13,7 +13,7 @@ export default function Footer() {
 
         {/* Текст та контакти */}
         <div className="text-center md:text-right text-black text-[10px] md:text-xs space-y-2">
-          <div className="flex flex-wrap md:grid md:grid-cols-2 gap-2">
+          <div className="flex flex-wrap items-center justify-center md:grid md:grid-cols-2 gap-2">
             <div>
               <p className="font-semibold">м. Київ</p>
               <p className="flex items-center justify-center md:justify-end gap-1">
