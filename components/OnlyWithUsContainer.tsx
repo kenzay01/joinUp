@@ -262,35 +262,56 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
               <>
                 <div className="flex md:hidden flex-col gap-4">
                   <div className="grid grid-cols-2 gap-4">
-                    <input
-                      type="text"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      placeholder="Ваше ім'я*"
-                      className="w-full px-4 py-2 bg-white border border-gray-300"
-                      disabled={isSubmitting}
-                    />
-                    <input
-                      type="tel"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleInputChange}
-                      placeholder="Ваш телефон*"
-                      className="w-full px-4 py-2 bg-white border border-gray-300"
-                      disabled={isSubmitting}
-                    />
+                    <div className="flex-1 min-w-[150px] max-w-[220px]">
+                      <input
+                        type="text"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        placeholder="Ваше ім'я*"
+                        className="w-full px-4 py-2 bg-white border border-gray-300"
+                        disabled={isSubmitting}
+                      />
+                      {errors.name && (
+                        <p className="text-red-500 text-xs mt-1">
+                          {errors.name}
+                        </p>
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-[150px] max-w-[220px]">
+                      <input
+                        type="tel"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        placeholder="Ваш телефон*"
+                        className="w-full px-4 py-2 bg-white border border-gray-300"
+                        disabled={isSubmitting}
+                      />
+                      {errors.phone && (
+                        <p className="text-red-500 text-xs mt-1">
+                          {errors.phone}
+                        </p>
+                      )}
+                    </div>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
-                    <input
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      placeholder="Ваш E-mail*"
-                      className="w-full px-4 py-2 bg-white border border-gray-300"
-                      disabled={isSubmitting}
-                    />
+                    <div className="flex-1 min-w-[150px] max-w-[220px]">
+                      <input
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        placeholder="Ваш E-mail*"
+                        className="w-full px-4 py-2 bg-white border border-gray-300"
+                        disabled={isSubmitting}
+                      />
+                      {errors.email && (
+                        <p className="text-red-500 text-xs mt-1">
+                          {errors.email}
+                        </p>
+                      )}
+                    </div>
                     <select
                       name="destination"
                       value={formData.destination}
@@ -410,35 +431,56 @@ export default function OnlyWithUsContainer({ type }: { type?: string }) {
               <>
                 <div className="flex md:hidden flex-col gap-4">
                   <div className="grid grid-cols-2 gap-4">
-                    <input
-                      type="text"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      placeholder="Ваше ім'я*"
-                      className="w-full px-4 py-2 bg-white border border-gray-300"
-                      disabled={isSubmitting}
-                    />
-                    <input
-                      type="tel"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleInputChange}
-                      placeholder="Ваш телефон*"
-                      className="w-full px-4 py-2 bg-white border border-gray-300"
-                      disabled={isSubmitting}
-                    />
+                    <div className="flex-1 min-w-[150px] max-w-[220px]">
+                      <input
+                        type="text"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        placeholder="Ваше ім'я*"
+                        className="w-full px-4 py-2 bg-white border border-gray-300"
+                        disabled={isSubmitting}
+                      />
+                      {errors.name && (
+                        <p className="text-red-500 text-xs mt-1">
+                          {errors.name}
+                        </p>
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-[150px] max-w-[220px]">
+                      <input
+                        type="tel"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        placeholder="Ваш телефон*"
+                        className="w-full px-4 py-2 bg-white border border-gray-300"
+                        disabled={isSubmitting}
+                      />
+                      {errors.phone && (
+                        <p className="text-red-500 text-xs mt-1">
+                          {errors.phone}
+                        </p>
+                      )}
+                    </div>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
-                    <input
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      placeholder="Ваш email*"
-                      className="w-full px-4 py-2 bg-white border border-gray-300"
-                      disabled={isSubmitting}
-                    />
+                    <div className="flex-1 min-w-[150px] max-w-[220px]">
+                      <input
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        placeholder="Ваш email*"
+                        className="w-full px-4 py-2 bg-white border border-gray-300"
+                        disabled={isSubmitting}
+                      />
+                      {errors.email && (
+                        <p className="text-red-500 text-xs mt-1">
+                          {errors.email}
+                        </p>
+                      )}
+                    </div>
                     <select
                       name="destination"
                       value={formData.destination}
