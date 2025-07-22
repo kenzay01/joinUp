@@ -8,6 +8,7 @@ import WhereToFind from "@/components/WhereToFind";
 import RightSideButtons from "@/components/RightSideButtons";
 import TelegramPopup from "@/components/TelegramPopup";
 import CommentsContainer from "@/components/CommentsContainer";
+import CallSection from "@/components/CallSection";
 export default function Home() {
   return (
     <div>
@@ -19,6 +20,7 @@ export default function Home() {
       <WhyJoinUp />
       <OnlyWithUsContainer type="type2" />
       <CommentsContainer />
+      <CallSection />
       <WhereToFind />
       <RightSideButtons />
       <TelegramPopup />
