@@ -1,6 +1,6 @@
 export default function CallSection() {
   return (
-    <section className="bg-orange-500 text-white flex flex-col gap-2 items-center justify-center py-16">
+    <section className="bg-orange-500 text-white flex flex-col gap-2 items-center justify-center py-8 md:py-16">
       <h1 className="text-3xl md:text-4xl font-bold text-center">
         Зручніше писати, <br /> ніж дзвонити?
       </h1>
